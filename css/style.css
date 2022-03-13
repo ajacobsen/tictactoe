@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;0,900;1,300;1,400&display=swap');
+
+:root {
+    --grid-size: 3;
+    --cell-size: 20vmin;
+    --cell-gap: 2vmin;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.container {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    place-items: center;
+    place-content: center;
+}
+
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    align-items: center;
+    justify-items: center;
+    padding: var(--cell-gap);
+}
+
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    place-content: center;
+    place-items: center;
+    font-size: var(--cell-size);
+}
+
+.mark {
+    animation: fadeIn 500ms;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.cell.border-sides {
+    border-left: 1vmin solid #333;
+    border-right: 1vmin solid #333;
+}
+
+.cell.border-topbottom {
+    border-top: 1vmin solid #333;
+    border-bottom: 1vmin solid #333;
+}
+
+.scores {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    font-size: 2rem;
+}
