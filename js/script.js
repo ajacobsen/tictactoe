@@ -212,59 +212,59 @@ const GameStates = {
     END: 5
 }
 
-const game = {
-    players: [],
-    currentPlayer: 0,
-    ties: 0,
-    round: -1,
-    state: GameStates.INIT,
+const game = (() => {
+    let players = [];
+    let currentPlayer = 0;
+    let ties = 0;
+    let round = -1;
+    let state = GameStates.INIT;
 
-    handleClick: function () {
-        if (game.state === GameStates.END) {
-            game.state = GameStates.PRE_ROUND;
-            game.run();
+    function handleClick() {
+        if (state === GameStates.END) {
+            state = GameStates.PRE_ROUND;
+            run();
             return;
         }
-        if (game.state !== GameStates.PLAYER_MOVE) return;
+        if (state !== GameStates.PLAYER_MOVE) return;
         if (!gameBoard.isEmpty(this.dataset.index)) return;
-        game.makeMove(this.dataset.index, game.players[game.currentPlayer].mark);
-    },
+        makeMove(this.dataset.index, players[currentPlayer].mark);
+    }
     
-    makeMove: function (index, mark) {
+    function makeMove(index, mark) {
         gameBoard.markCell(index, mark);
         displayController.markCell(index, mark);
-        game.state = GameStates.POST_MOVE;
-        game.run();
-    },
+        state = GameStates.POST_MOVE;
+        run();
+    }
 
-    checkWinOrTie: function () {
-        return (gameBoard.didWin(game.players[game.currentPlayer].mark).length > 0 || gameBoard.isTie());
-    },
+    function checkWinOrTie() {
+        return (gameBoard.didWin(players[currentPlayer].mark).length > 0 || gameBoard.isTie());
+    }
     
-    run: function () {
-        switch (game.state) {
+    function run() {
+        switch (state) {
             case GameStates.INIT:
-                game.players = [PlayerFactory('Bob', 'X', false), PlayerFactory('Bobby', 'O', true)];
-                game.state = GameStates.PLAYER_MOVE;
+                players = [PlayerFactory('Bob', 'X', false), PlayerFactory('Bobby', 'O', true)];
+                state = GameStates.PLAYER_MOVE;
 
             case GameStates.PRE_ROUND:
                 gameBoard.initialize();
                 displayController.initialize();
-                game.round++;
-                game.currentPlayer = game.round % 2
-                game.state = game.players[game.currentPlayer].isCpu ? GameStates.CPU_MOVE : GameStates.PLAYER_MOVE;
-                game.run();
+                round++;
+                currentPlayer = round % 2
+                state = players[currentPlayer].isCpu ? GameStates.CPU_MOVE : GameStates.PLAYER_MOVE;
+                run();
                 break;
 
             case GameStates.CPU_MOVE:
                 if (Math.random() < 1) {
                     let move = AI.findBestMove([...gameBoard.getCells()]);
-                    game.makeMove(move, game.players[game.currentPlayer].mark);
+                    makeMove(move, players[currentPlayer].mark);
                 } else {
                     while (true) {
                         let index = Math.floor(Math.random() * 9);
                         if (gameBoard.isEmpty(index)) {
-                            game.makeMove(index, game.players[game.currentPlayer].mark);
+                            makeMove(index, players[currentPlayer].mark);
                             break;
                         }
                     }
@@ -272,16 +272,16 @@ const game = {
                 break;
 
             case GameStates.POST_MOVE:
-                if (game.checkWinOrTie()) {
-                    game.state = GameStates.END;
-                    game.run();
+                if (checkWinOrTie()) {
+                    state = GameStates.END;
+                    run();
                 } else {
-                    game.currentPlayer = game.currentPlayer == 1 ? 0 : 1;
-                    if (game.players[this.currentPlayer].isCpu) {
-                        game.state = GameStates.CPU_MOVE;
-                        game.run();
+                    currentPlayer = currentPlayer == 1 ? 0 : 1;
+                    if (players[currentPlayer].isCpu) {
+                        state = GameStates.CPU_MOVE;
+                        run();
                     } else {
-                        game.state = GameStates.PLAYER_MOVE;
+                        state = GameStates.PLAYER_MOVE;
                     }
                 }
                 break;
@@ -289,10 +289,10 @@ const game = {
             case GameStates.END:
                 winCells = gameBoard.didWin(game.players[game.currentPlayer].mark);
                 if (winCells.length > 0) {
-                    game.players[game.currentPlayer].incrementScore();
+                    players[currentPlayer].incrementScore();
                     displayController.highlightWinner(winCells);
                 } else {
-                    game.ties++;
+                    ties++;
                     displayController.highlightWinner([]);
                 }
                 displayController.updateScore();
@@ -302,6 +302,8 @@ const game = {
                 break;
         }
     }
-}
+    
+    return {run, handleClick};
+})();
 
 game.run();
