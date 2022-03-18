@@ -182,22 +182,18 @@ const AI = (() => {
     findBestMove = (board) => {
         let bestValue = -1000;
         let bestMove = -1;
-        console.log(board);
         for (let i = 0; i < board.length; i++) {
             if (board[i] === '') {
                 board[i] = player;
                 let moveValue = minimax(board, 0, false);
                 board[i] = '';
                 
-                console.log(`best: ${bestValue}`);
-                console.log(`move: ${moveValue}`);
                 if (moveValue > bestValue) {
                     bestValue = moveValue;
                     bestMove = i;
                 }
             }
         }
-        console.log(`bestMove: ${bestMove}`);
         return bestMove;
     };
     return {findBestMove}
