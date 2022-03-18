@@ -12,7 +12,7 @@ const CellFactory = (index, value) => {
 const gameBoard =  (() => {
     let cells = [];
 
-    initialize = () => {
+    const initialize = () => {
         cells = [
             '', '', '', 
             '', '', '', 
@@ -20,23 +20,23 @@ const gameBoard =  (() => {
         ]
     }
 
-    getCells = () => {
+    const getCells = () => {
         return cells;
     }
 
-    markCell = (index, mark) => {
+    const markCell = (index, mark) => {
         cells[index] = mark;
     };
 
-    getEmptyCells = () => {
+    const getEmptyCells = () => {
         return cells.filter((cell) => cell === '');
     }
 
-    isEmpty = (index) => {
+    const isEmpty = (index) => {
         return cells[index] === '';
     };
 
-    didWin = (mark) => {
+    const didWin = (mark) => {
         let str = mark+mark+mark
         if ([cells[0], cells[1], cells[2]].join('') === str) return [0,1,2];
         if ([cells[3], cells[4], cells[5]].join('') === str) return [3,4,5];
@@ -49,7 +49,7 @@ const gameBoard =  (() => {
         return [];
     };
 
-    isTie = () => {
+    const isTie = () => {
         return getEmptyCells().length === 0;
     }
 
