@@ -60,26 +60,26 @@ const displayController = (() => {
     let boardEl = document.querySelector('.gameboard');
     let cellElements = [];
 
-    initialize = () => {
+    const initialize = () => {
         cellElements = [];
         createCells();
         render();
     };
 
-    createCells = () => {
+    const createCells = () => {
         for (let i = 0; i < 9; i++) {
             cellElements.push(CellFactory(i, ''));
         }
     };
 
-    markCell = (index, mark) => {
+    const markCell = (index, mark) => {
         let el = document.createElement('div');
         el.classList.add('mark');
         el.textContent = mark;
         cellElements[index].appendChild(el);
     };
 
-    highlightWinner = (indices) => {
+    const highlightWinner = (indices) => {
         cellElements.forEach(cellEl => {
             if (indices.includes(parseInt(cellEl.dataset.index))) {
                 cellEl.style.color = 'red';
@@ -89,11 +89,11 @@ const displayController = (() => {
         });
     }
     
-    render = () => {
+    const render = () => {
         boardEl.replaceChildren(...cellElements);
     };
 
-    updateScore = () => {
+    const updateScore = () => {
         document.querySelector('.p1.score').textContent = game.players[0].getScore();
         document.querySelector('.ties.score').textContent = game.ties;
         document.querySelector('.p2.score').textContent = game.players[1].getScore();
@@ -287,7 +287,7 @@ const game = (() => {
                 break;
 
             case GameStates.END:
-                winCells = gameBoard.didWin(game.players[game.currentPlayer].mark);
+                winCells = gameBoard.didWin(players[currentPlayer].mark);
                 if (winCells.length > 0) {
                     players[currentPlayer].incrementScore();
                     displayController.highlightWinner(winCells);
