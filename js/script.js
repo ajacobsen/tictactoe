@@ -93,10 +93,10 @@ const displayController = (() => {
         boardEl.replaceChildren(...cellElements);
     };
 
-    const updateScore = () => {
-        document.querySelector('.p1.score').textContent = game.players[0].getScore();
-        document.querySelector('.ties.score').textContent = game.ties;
-        document.querySelector('.p2.score').textContent = game.players[1].getScore();
+    const updateScore = (p1score, ties, p2score) => {
+        document.querySelector('.p1.score').textContent = p1score;
+        document.querySelector('.ties.score').textContent = ties;
+        document.querySelector('.p2.score').textContent = p2score;
     };
 
     return {initialize, render, markCell, updateScore, highlightWinner};
@@ -295,7 +295,7 @@ const game = (() => {
                     ties++;
                     displayController.highlightWinner([]);
                 }
-                displayController.updateScore();
+                displayController.updateScore(players[0].getScore(), ties, players[1].getScore());
                 break;
 
             default:
